@@ -2,20 +2,20 @@
     "version": 10,
     "cmakeMinimumRequired": {
         "major": 3,
-        "minor": 31,
+        "minor": 28,
         "patch": 0
     },
     "configurePresets": [
         {
             "name": "baseConfigure",
-            "generator": "MSYS Makefiles",
+            "generator": "Ninja Multi-Config",
             "hidden": true,
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
                 "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/toolchains/windows-wsl2-clang.cmake",
-                "VCPKG_TARGET_TRIPLET": "x64-mingw-static-custom",
-                "VCPKG_HOST_TRIPLET": "x64-mingw-static-custom",
+                "VCPKG_TARGET_TRIPLET": "x64-windows-static-custom",
+                "VCPKG_HOST_TRIPLET": "x64-windows-static-custom",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "OFF",
                 "ENABLE_CLANG_TIDY": "OFF"
             }
