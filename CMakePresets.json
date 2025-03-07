@@ -1,57 +1,112 @@
 {
-    "version": 6,
+    "version": 10,
     "cmakeMinimumRequired": {
         "major": 3,
-        "minor": 25,
+        "minor": 31,
         "patch": 0
     },
     "configurePresets": [
         {
-            "name": "default",
-            "generator": "Ninja Multi-Config",
+            "name": "baseConfigure",
+            "generator": "MSYS Makefiles",
             "hidden": true,
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-                "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/toolchains/clang-toolchain.cmake",
-                "VCPKG_TARGET_TRIPLET": "x64-windows-static-custom",
-                "VCPKG_HOST_TRIPLET": "x64-windows-static-custom"
+                "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/toolchains/windows-wsl2-clang.cmake",
+                "VCPKG_TARGET_TRIPLET": "x64-mingw-static-custom",
+                "VCPKG_HOST_TRIPLET": "x64-mingw-static-custom",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "OFF",
+                "ENABLE_CLANG_TIDY": "OFF"
+            }
+        },
+        {
+            "name": "baseConfigure-Tidy",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build-tidy",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
             }
         },
         {
             "name": "Debug",
             "inherits": [
-                "default"
+                "baseConfigure"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
+            "name": "Debug-Tidy",
+            "inherits": [
+                "Debug",
+                "baseConfigure-Tidy"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
+            }
+        },
+        {
             "name": "Release",
             "inherits": [
-                "default"
+                "baseConfigure"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
+            "name": "Release-Tidy",
+            "inherits": [
+                "Release",
+                "baseConfigure-Tidy"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
+            }
+        },
+        {
             "name": "RelWithDebInfo",
             "inherits": [
-                "default"
+                "baseConfigure"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo"
             }
         },
         {
+            "name": "RelWithDebInfo-Tidy",
+            "inherits": [
+                "RelWithDebInfo",
+                "baseConfigure-Tidy"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
+            }
+        },
+        {
             "name": "MinSizeRel",
             "inherits": [
-                "default"
+                "baseConfigure"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "MinSizeRel"
+            }
+        },
+        {
+            "name": "MinSizeRel-Tidy",
+            "inherits": [
+                "MinSizeRel",
+                "baseConfigure-Tidy"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "ENABLE_CLANG_TIDY": "ON"
             }
         }
     ],
@@ -61,21 +116,37 @@
             "configurePreset": "Debug"
         },
         {
+            "name": "Debug-Tidy",
+            "configurePreset": "Debug-Tidy"
+        },
+        {
             "name": "Release",
             "configurePreset": "Release"
+        },
+        {
+            "name": "Release-Tidy",
+            "configurePreset": "Release-Tidy"
         },
         {
             "name": "RelWithDebInfo",
             "configurePreset": "RelWithDebInfo"
         },
         {
+            "name": "RelWithDebInfo-Tidy",
+            "configurePreset": "RelWithDebInfo-Tidy"
+        },
+        {
             "name": "MinSizeRel",
             "configurePreset": "MinSizeRel"
+        },
+        {
+            "name": "MinSizeRel-Tidy",
+            "configurePreset": "MinSizeRel-Tidy"
         }
     ],
     "testPresets": [
         {
-            "name": "default",
+            "name": "baseTest",
             "hidden": true,
             "output": {
                 "outputOnFailure": true
@@ -88,28 +159,28 @@
         {
             "name": "Debug",
             "inherits": [
-                "default"
+                "baseTest"
             ],
             "configurePreset": "Debug"
         },
         {
             "name": "Release",
             "inherits": [
-                "default"
+                "baseTest"
             ],
             "configurePreset": "Release"
         },
         {
             "name": "RelWithDebInfo",
             "inherits": [
-                "default"
+                "baseTest"
             ],
             "configurePreset": "RelWithDebInfo"
         },
         {
             "name": "MinSizeRel",
             "inherits": [
-                "default"
+                "baseTest"
             ],
             "configurePreset": "MinSizeRel"
         }
@@ -129,6 +200,19 @@
             ]
         },
         {
+            "name": "Debug-Tidy",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Debug-Tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "Debug-Tidy"
+                }
+            ]
+        },
+        {
             "name": "Release",
             "steps": [
                 {
@@ -138,6 +222,19 @@
                 {
                     "type": "build",
                     "name": "Release"
+                }
+            ]
+        },
+        {
+            "name": "Release-Tidy",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "Release-Tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "Release-Tidy"
                 }
             ]
         },
@@ -155,6 +252,19 @@
             ]
         },
         {
+            "name": "RelWithDebInfo-Tidy",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "RelWithDebInfo-Tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "RelWithDebInfo-Tidy"
+                }
+            ]
+        },
+        {
             "name": "MinSizeRel",
             "steps": [
                 {
@@ -164,6 +274,19 @@
                 {
                     "type": "build",
                     "name": "MinSizeRel"
+                }
+            ]
+        },
+        {
+            "name": "MinSizeRel-Tidy",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "MinSizeRel-Tidy"
+                },
+                {
+                    "type": "build",
+                    "name": "MinSizeRel-Tidy"
                 }
             ]
         }

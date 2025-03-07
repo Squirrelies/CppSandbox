@@ -120,4 +120,8 @@
     },
     "C_Cpp.default.cppStandard": "c++23",
     "cmake.generator": "Ninja Multi-Config",
+    "cmake.configureSettings": {
+        "CMAKE_TOOLCHAIN_FILE": "${workspaceFolder}/windows-clang.cmake"
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
